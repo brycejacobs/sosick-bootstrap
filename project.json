@@ -1,0 +1,15 @@
+{
+  "path": {
+    "bower": "client/lib",
+    "client": "client",
+    "config": "config",
+    "dist": "dist",
+    "log": "log",
+    "server": "server",
+    "test": "test",
+    "temp": "temp"
+  },
+  "server": {
+    "port": 3000
+  }
+}
