@@ -24,6 +24,7 @@
     "koa-compress": "1.x.x",
     "koa-favi": "0.x.x",
     "koa-log4js": "0.x.x",
+    "koa-router": "2.x.x",
     "koa-static": "1.x.x",
     "require-dir": "0.1.x",
     "redis": "~0.10.x",

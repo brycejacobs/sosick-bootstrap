@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sosick Bootstrap</title>
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@travenbjj">
+    <meta name="twitter:title" content="Roberto Traven BJJ">
+    <meta name="twitter:description" content="A daily video site for learning Jiu-Jitsu techniques by Roberto Traven.">
+    <meta name="twitter:creator" content="@sosickstudios">
+    <meta name="twitter:image:src" content="http://traven.herokuapp.com/images/logo.png">
+    <meta property="og:title" content="Roberto Traven BJJ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://traven.herokuapp.com" />
+    <meta property="og:image" content="http://traven.herokuapp.com/images/logo.png" />
+    <meta property="og:description" content="A Sosick Bootstrap">
+    <script type="text/javascript" src="//use.typekit.net/eld3wsq.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <header class="show">
+      <a class="mobile-nav" ng-class="{show: isNavOpen}" ng-click="isNavOpen = !isNavOpen"><i class="fa fa-bars"></i></a>
+      <ul class="global-nav">
+        <li><a ui-sref="home">Home</a></li>
+        <li><a href="#">About Traven</a></li>
+        <li><a ui-sref="store">Store</a></li>
+        <li><a href="/members#!/signin">Login / Signup</a></li>
+      </ul>
+      <a ui-sref="home"><img class="logo" src="/images/logo.png" alt="Roberto Traven Jiu Jitsu"></a>
+    </header>
+
+    <nav role="navigation" class="show">
+      <ul>
+        <li class="global-nav-item"><a ui-sref="home">Home</a></li>
+        <li class="global-nav-item"><a href="#">About Traven</a></li>
+        <li class="global-nav-item"><a ui-sref="store">Store</a></li>
+        <li ng-if="!user.name"><a href="#">Login / Signup</a></li>
+        <li ng-if="user.name"><a ui-sref="home">Dashboard</a></li>
+        <li ng-if="user.name"><a ui-sref="latest">Latest Videos</a></li>
+        <li ng-if="user.name"><a ui-sref="account">My Account</a></li>
+        <li ng-if="user.isAdmin"><a ui-sref="admin">Admin</a></li>
+      </ul>
+    </nav>
+
+    <main ng-class="{show: isNavOpen}">
+      <div ui-view></div>
+    </main>
+
+    <footer></footer>
+
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-cookies.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-sanitize.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+
+    <!-- build:js js/app.js -->
+    <script src="/lib/angular-ui-router/release/angular-ui-router.js"></script>
+
+    <!-- endbuild -->
+
+   <script>
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+     ga('create', 'UA-39729156-3', 'robertotravenbjj.net');
+   </script>
+  </body>
+</html>

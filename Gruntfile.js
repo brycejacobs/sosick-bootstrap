@@ -82,39 +82,6 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('devBuild', [
-    'clean:dev',
-    'copy:dev',
-    'cacheBust:dev'
-  ]);
-
-  grunt.registerTask('build', [
-    'jshint',
-    'clean:dist',
-    'useminPrepare',
-    'imagemin:dist',
-    'htmlmin:dist',
-    'cssmin:dist',
-    'uglify:dist',
-    'copy:dist',
-    'usemin',
-    'cacheBust:dist'
-  ]);
-
-  grunt.registerTask('deploy', [
-    'copy:heroku',
-    'build',
-    'bump',
-    'copy:github'
-  ]);
-
-  grunt.registerTask('checkin', [
-    'copy:github',
-    'clean:client'
-  ]);
-
-  grunt.registerTask('develop', ['open', 'watch']);
-
   // Default
-  grunt.registerTask('default', 'develop');
+  grunt.registerTask('default', 'copy:dist');
 };

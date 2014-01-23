@@ -14,7 +14,8 @@ var _ = require('lodash'),
     logger = require('koa-log4js'),
     compress = require('koa-compress'),
     session = require('koa-session'),
-    csrf = require('koa-csrf');
+    csrf = require('koa-csrf'),
+    router = require('koa-router');
 
 
 
@@ -23,7 +24,7 @@ var _app = null,
 
 function _configure() {
 
-
+  _server.use(router(_server));
   _server.use(favicon(path.join(_app.dir, '..', _app.project.path.client, 'favicon.ico')));
   _server.use(compress());
   csrf(_server);
