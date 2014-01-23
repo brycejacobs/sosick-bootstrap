@@ -20,6 +20,7 @@ var _client = null;
  * @return {Client}
  */
 function connect(mongoConfig, cb) {
+  console.log(mongoConfig);
   var mongoUrl = url.parse(process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || '');
 
   if (mongoUrl.href) {
@@ -70,11 +71,12 @@ function connect(mongoConfig, cb) {
   return _client;
 }
 
-// Public API
-exports = module.exports = connect;
+exports.connect = connect;
+// // Public API
+// exports = module.exports = connect;
 
-Object.defineProperty(exports, '_client', {
-  get: function () {
-    return _client;
-  }
-});
+// Object.defineProperty(exports, '_client', {
+//   get: function () {
+//     return _client;
+//   }
+// });

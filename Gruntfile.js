@@ -165,12 +165,7 @@ module.exports = function (grunt) {
       grunt: [
         'Gruntfile.js'
       ]
-    },
-    open: {  // grunt-open
-      dev: {
-        url: 'http://localhost:<%= process.env.PORT || project.server.port %>'
-      }
-    },
+    }
     uglify: {
       dist: {
         options: {
@@ -210,14 +205,7 @@ module.exports = function (grunt) {
         src: [ '<%= project.path.client %>/**/*.tpl.html' ],
         dest: '<%= project.path.client %>/templates.js'
       }
-    },
-    sass: {
-      dev: {
-        files: {
-          '<%= project.path.client %>/styles.css': '<%= project.path.client %>/app.scss'
-        }
-      }
-    },
+    }
     concat: {
 
     },
@@ -230,8 +218,7 @@ module.exports = function (grunt) {
           '<%= project.path.client %>/index.html',
           '<%= project.path.client %>/fonts/{,*/}*',
           '<%= project.path.client %>/img/{,*/}*.png',
-          '<%= project.path.client %>/**/*.js',
-          '<%= project.path.server %>/views/{,*/}*.hbs'
+          '<%= project.path.client %>/**/*.js'
         ]
       },
       tpls: {
@@ -256,19 +243,12 @@ module.exports = function (grunt) {
           livereload: true
         },
         files: ['<%= project.path.client %>/**/{,*/}*.css']
-      },
-      sass: {
-        options: {
-        },
-        files: ['<%= project.path.client %>/**/{,*/}*.scss'],
-        tasks: ['sass']
       }
     }
   });
 
   grunt.registerTask('devBuild', [
     'clean:dev',
-    'less:dev',
     'copy:dev',
     'cacheBust:dev'
   ]);
@@ -297,17 +277,6 @@ module.exports = function (grunt) {
     'copy:github',
     'clean:client'
   ]);
-
-  grunt.registerTask('devServer', function () {
-    process.env.LIVERELOAD = 35729;
-    grunt.task.run([
-      'express',
-      'open'
-    ]);
-    if (process.env.NODE_ENV !== 'heroku' && process.env.NODE_ENV !== 'production') {
-      grunt.task.run('watch');
-    }
-  });
 
   grunt.registerTask('develop', ['open', 'watch']);
 

@@ -1,4 +1,5 @@
 {
+  "name": "SosickBootstrap",
   "path": {
     "bower": "client/lib",
     "client": "client",

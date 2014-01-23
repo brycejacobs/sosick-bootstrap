@@ -80,12 +80,13 @@ app.attachMiddlewares = function () {
 app.run = function () {
   // Connect to DB
 
-  // require('./utility/mongooseconnect').connect(app.config.db.mongo);
-  // require('./utility/redisconnect').connect(app.config.db.redis);
+  require('./lib/mongoose').connect(app.config.db.mongo);
+  // require('./lib/redis').connect(app.config.db.redis);
 
   // Start servers
-  require('./utility/koa').run(app);
+  require('./lib/koa').run(app);
+  require('./lib/http').run(app);
 
   // Return HTTP server
-  return app.servers.koa.getServer();
+  return app.servers.http.getServer();
 };
