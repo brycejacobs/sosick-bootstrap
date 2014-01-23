@@ -14,21 +14,7 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig({
     project: project,
-    bump: {
-      options: {
-        commitFiles: ['-a'],
-        createTag: false,
-        pushTo: 'heroku'
-      }
-    },
     cacheBust: {
-      dev: {
-        files: {
-          src: [
-            '<%= project.path.temp %>/index.html'
-          ]
-        }
-      },
       dist: {
         files: {
           src: [
@@ -36,11 +22,6 @@ module.exports = function (grunt) {
           ]
         }
       }
-    },
-    clean: {  // grunt-contrib-clean
-      dist: [
-        '<%= project.path.dist %>'
-      ]
     },
     copy: {  // grunt-contrib-copy
       heroku: {
@@ -97,152 +78,6 @@ module.exports = function (grunt) {
             ]
           }
         ]
-      }
-    },
-    cssmin: {  // grunt-contrib-cssmin
-      dist: {
-        files: {
-          '<%= project.path.dist %>/css/main.css': [
-            '<%= project.path.temp %>/css/**/*.css',
-            '<%= project.path.dist %>/css/**/*.css'
-          ]
-        }
-      }
-    },
-    express: {  // grunt-express
-      server: {
-        options: {
-          bases: [],
-          debug: true,
-          port: '<%= process.env.PORT || project.server.port %>',
-          server: path.resolve('<%= project.path.server %>')
-        }
-      }
-    },
-    htmlmin: {  // grunt-contrib-htmlmin
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= project.path.client %>',
-          src: [
-            '*.html'
-          ],
-          dest: '<%= project.path.dist %>'
-        }]
-      }
-    },
-    imagemin: {  // grunt-contrib-imagemin
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= project.path.client %>/img',
-          src: '**/*.{png,jpg,jpeg}',
-          dest: '<%= project.path.dist %>/img'
-        }]
-      }
-    },
-    jshint: {  // grunt-contrib-jshint
-      options: {
-        jshintrc: '.jshintrc-server'
-      },
-      client: {
-        options: {
-          jshintrc: '.jshintrc'
-        },
-        files: {
-          src: [
-            '<%= project.path.client %>/**/*.js',
-            '!<%= project.path.client %>/lib/**/*.js',
-            '!<%= project.path.client %>/templates.js'
-          ]
-        }
-      },
-      server: {
-        files: {
-          src: '<%= project.path.server %>/**/*.js'
-        }
-      },
-      grunt: [
-        'Gruntfile.js'
-      ]
-    }
-    uglify: {
-      dist: {
-        options: {
-          mangle: false
-        },
-        files: {
-          '<%= project.path.dist %>/js/app.js':
-          [
-            '<%= project.path.client %>/**/*.js',
-            '!<%= project.path.client %>/lib/**/*.js',
-            '<%= project.path.client %>/lib/angular-ui-utils/modules/route/route.js'
-          ]
-        }
-      }
-    },
-    usemin: {  // grunt-usemin
-      options: {
-        dirs: ['<%= project.path.dist %>']
-      },
-      html: ['<%= project.path.dist %>/**/*.html'],
-      css: ['<%= project.path.dist %>/**/*.css']
-    },
-    useminPrepare: {  // grunt-usemin
-      options: {
-        dest: '<%= project.path.dist %>'
-      },
-      html: '<%= project.path.client %>/index.html'
-    },
-    html2js: {
-      /**
-       * These are the templates from `src/app`.
-       */
-      app: {
-        options: {
-          base: '<%= project.path.client %>'
-        },
-        src: [ '<%= project.path.client %>/**/*.tpl.html' ],
-        dest: '<%= project.path.client %>/templates.js'
-      }
-    }
-    concat: {
-
-    },
-    watch: {  // grunt-contrib-watch
-      assets: {
-        options: {
-          livereload: true
-        },
-        files: [
-          '<%= project.path.client %>/index.html',
-          '<%= project.path.client %>/fonts/{,*/}*',
-          '<%= project.path.client %>/img/{,*/}*.png',
-          '<%= project.path.client %>/**/*.js'
-        ]
-      },
-      tpls: {
-        files: [
-          '<%= project.path.client %>/**/{,*/}*.tpl.html'
-        ],
-        tasks: [ 'html2js' ]
-      },
-      jsHintClient: {
-        files: [
-          '<%= project.path.client %>/**/{,*/}*.js',
-          '!<%= project.path.client %>/templates.js'
-        ],
-        tasks: ['jshint:client']
-      },
-      jsHintServer: {
-        files: ['<%= project.path.server %>/**/{,*/}*.js'],
-        tasks: ['jshint:server']
-      },
-      css: {
-        options: {
-          livereload: true
-        },
-        files: ['<%= project.path.client %>/**/{,*/}*.css']
       }
     }
   });

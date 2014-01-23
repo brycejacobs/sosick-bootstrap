@@ -1,0 +1,17 @@
+#
+# .gitignore
+#
+
+.git.*
+.gitignore.*
+/temp/
+/config/development.json
+#/config/heroku.json
+/config/production.json
+/log/
+client/lib
+node_modules/
+npm-debug.log
+.tern-port
+*.sublime-project
+.DS_STORE

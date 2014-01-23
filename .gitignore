@@ -1,0 +1,17 @@
+#
+# .gitignore
+#
+
+*.sublime-project
+.git.*
+.gitignore.*
+/temp/
+/dist/
+/log/
+node_modules/
+client/lib
+npm-debug.log
+.tern-port
+.DS_STORE
+client/styles.css
+client/templates.js

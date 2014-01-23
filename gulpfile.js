@@ -6,30 +6,22 @@ sass       = require('gulp-sass'),
 lr         = require('tiny-lr'),
 livereload = require('gulp-livereload'),
 html2js  = require('gulphtml2js'),
-server     = lr();
+server     = lr(),
+minifyHtml = require('gulp-minify-html'),
+concat = require('gulp-concat'),
+uglify = require('gulp-uglify'),
+gulpIf = require('gulp-if'),
+clean = require('gulp-clean'),
+cssMin = require('gulp-minify-css'),
+bower = require('gulp-bower'),
+bump = require('gulp-bump'),
+git  = require('gulp-git'),
 
-var minifyHtml = require('gulp-minify-html');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var gulpIf = require('gulp-if');
-var clean = require('gulp-clean');
-var cssMin = require('gulp-minify-css');
-var bower = require('gulp-bower');
-var bump = require('gulp-bump');
+require('gulp-grunt')(gulp);
 
 var project = require('./project');
 var production = false;
 
-gulp.task('prepareDeploy', function () {
-  production = true;
-});
-
-gulp.task('build',
-  [
-    'prepareDeploy',
-
-
-  ]);
 
 gulp.task('bump', function(){
   return gulp.src('./package.json')
@@ -59,6 +51,12 @@ gulp.task('distUglify', function () {
     .pipe(gulp.dest(project.path.dist + '/js/'))
 });
 
+gulp.task('herokupush', function () {
+  return gulp.src('./*')
+  .pipe(git.commit('Work to repo'))
+  .pipe(git.push('heroku', 'master'));
+});
+
 gulp.task('html2js', function () {
   return gulp.src(project.path.client + '/**/*.tpl.html')
     .pipe(html2Js())
@@ -67,8 +65,26 @@ gulp.task('html2js', function () {
     .pipe(gulpIf(!production, gulp.dest(project.path.dist + '/templates')));
 });
 
+gulp.task('htmlmin', function () {
+  return gulp.src(project.path.client + '/*.html')
+    .pipe(minifyHtml())
+    .pipe(gulp.dest(project.path.dist));
+});
+
 gulp.task('imagemin', function () {
-  return gulp.src(project.path.client + '/img/**/*.{png,jpeg,gif}')
+  gulp.src(project.path.client + '/img/**/*.jpeg')
+    .pipe(imagemin())
+    .pipe(gulp.dest(project.path.dist + '/img'));
+
+  gulp.src(project.path.client + '/img/**/*.jpg')
+    .pipe(imagemin())
+    .pipe(gulp.dest(project.path.dist + '/img'));
+
+  gulp.src(project.path.client + '/img/**/*.png')
+    .pipe(imagemin())
+    .pipe(gulp.dest(project.path.dist + '/img'));
+
+  gulp.src(project.path.client + '/img/**/*.gif')
     .pipe(imagemin())
     .pipe(gulp.dest(project.path.dist + '/img'));
 });
@@ -83,6 +99,20 @@ gulp.task('jshintserver', function () {
   return gulp.src(project.path.server + '/**/*.js')
     .pipe(jshint('.jshint-server'))
     .pipe(jshint.reporter('default'));
+});
+
+gulp.task('nodemon', function () {
+  nodemon({ script: project.path.server, options: '--harmony-generators -e js' })
+    .on('restart', ['jshintserver'])
+    .on('crash', ['restart']);
+});
+
+gulp.task('prepareDeploy', function () {
+  production = true;
+});
+
+gulp.task('restart', function () {
+  nodemon.emit('restart');
 });
 
 // Compile Our Sass
@@ -112,9 +142,23 @@ gulp.task('usemin', function() {
     .pipe(gulp.dest(project.path.dist));
 });
 
+gulp.task('build', [
+  'prepareDeploy',
+  'jshintserver',
+  'jshintclient',
+  'imagemin',
+  'htmlmin',
+  'cssmin',
+  'uglify',
+  'copy:dist',
+  'usemin',
+  'cacheBust:dist'
+]);
+
 // Default Task
 gulp.task('default', function(){
   gulp.run('sass');
+  gulp.run('nodemon');
   // Watch For Changes To Our SCSS
   server.listen(35729, function (err) {
     if (err) { return console.log(err); }
@@ -125,6 +169,7 @@ gulp.task('default', function(){
           files: [evt.path]
         }
       });
+      gulp.run('html2js');
     });
 
     gulp.watch('<%= project.path.client %>/**/*.scss', function(){
@@ -134,10 +179,10 @@ gulp.task('default', function(){
 });
 
 gulp.task('deploy', [
-  'heroku:copy',
+  'copy:heroku',
+  'bump',
   'build',
   'repopush',
   'githubcopy'
-
 ]);
 

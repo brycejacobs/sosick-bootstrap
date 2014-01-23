@@ -1,0 +1,11 @@
+#
+# .slugignore
+#
+
+.git.*
+.gitignore.*
+/.tmp/
+/config/development.json
+/config/production.json
+/log/
+npm-debug.log
