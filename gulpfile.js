@@ -19,7 +19,8 @@ git  = require('gulp-git'),
 nodemon = require('gulp-nodemon'),
 jshint = require('gulp-jshint'),
 imagemin = require('gulp-imagemin'),
-usemin = require('gulp-usemin');
+usemin = require('gulp-usemin'),
+browserify = require('gulp-browserify');
 
 var project = require('./project');
 var dist = false;
@@ -54,7 +55,8 @@ gulp.task('browserify', function () {
             exports: 'es5-shim'
           },
           json3: {
-            path: project.path.bower + '/json3/lib/json3.js'
+            path: project.path.bower + '/json3/lib/json3.js',
+            exports: 'json3'
           }
         }
       }))
@@ -117,7 +119,10 @@ gulp.task('imagemin', function () {
 });
 
 gulp.task('jshintclient', function () {
-  return gulp.src(project.path.client + '/*{.js, */*.js}')
+  return gulp.src([
+    project.path.client + '/*{.js, */*.js}',
+    '!' + project.path.client + '/templates.js'
+    ])
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'));
 });
