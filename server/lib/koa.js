@@ -49,9 +49,12 @@ function _configure() {
     this.body = { name: body.name.toUpperCase() };
   });
 
+
+
   if(process.env.NODE_ENV === 'development') {
-    _server.use(serve(path.join(_app.dir, '../..', _app.project.path.temp)));
-    _server.use(serve(path.join(_app.dir, '../..', _app.project.path.client)));
+    _server.use(serve(
+      path.join(_app.dir, '..', _app.project.path.dist)
+    ));
     _server.use(logger());
   }
 
@@ -66,15 +69,6 @@ function _configure() {
       console.log(err.stack);
       this.response.status = 500;
       this.response.body = 'Sorry we have encountered an error.';
-    });
-
-    _server.use(function (err, req, res) {
-      console.error(err.stack);
-      res.status(err.status);
-      res.render('error', {
-        layout: false,
-        message: err.message
-      });
     });
   }
 }

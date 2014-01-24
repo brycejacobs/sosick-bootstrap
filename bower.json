@@ -13,6 +13,7 @@
     "angular-bootstrap": "~0.10.0",
     "sass-bootstrap": "3.0.x",
     "angular-ui-utils": "~0.1.x",
-    "angularLocalStorage": "0.1.x"
+    "angularLocalStorage": "0.1.x",
+    "angular-easyfb": "0.2.x"
   }
 }

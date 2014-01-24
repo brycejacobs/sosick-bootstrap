@@ -19,9 +19,8 @@ git  = require('gulp-git'),
 nodemon = require('gulp-nodemon'),
 jshint = require('gulp-jshint'),
 imagemin = require('gulp-imagemin'),
-usemin = require('gulp-usemin'),
-browserify = require('gulp-browserify');
-
+browserify = require('gulp-browserify'),
+es6ify = require('es6ify');
 var project = require('./project');
 var dist = false;
 
@@ -41,7 +40,12 @@ gulp.task('browserify', function () {
       .pipe(jshint('.jshintrc'))
       .pipe(browserify({
         debug: !dist,
+        transform: es6ify,
         shim: {
+          'angular-easyfb': {
+            path: project.path.bower + '/angular-easyfb/angular-easyfb.js',
+            exports: 'ezfb'
+          },
           angularLocalStorage: {
               path: project.path.bower + '/angularLocalStorage/src/angularLocalStorage.js',
               exports: 'angularLocalStorage'
@@ -211,15 +215,10 @@ gulp.task('default', function(){
     if (err) { return console.log(err); }
 
     gulp.watch(project.path.client + '/**/*.tpl.html', function () {
-      // server.changed({
-      //   body: {
-      //     files: [evt.path]
-      //   }
-      // });
       gulp.run('html2js');
     });
 
-    gulp.watch(project.path.client '/*.html', function () {
+    gulp.watch(project.path.client + '/*.html', function () {
       gulp.run('htmlmin');
     });
 
@@ -227,12 +226,24 @@ gulp.task('default', function(){
       gulp.run('sass');
     });
 
-    gulp.watch(project.path.client + '/*{.js, */*.js}', function () {
+    gulp.watch([
+        project.path.client + '/*{.js, */*.js}',
+        '!' + project.path.bower + '/**/*.js'
+      ], function () {
+      gulp.run('jshintclient');
       gulp.run('browserify');
     });
 
-    gulp.watch(project.path.client + '/**/*.{png, jpg, jpeg}', function () {
+    gulp.watch([
+        project.path.server + '/*{.js, */*.js}',
+        '!' + project.path.npm + '/**/*.js'
+      ], function () {
+      gulp.run('jshintserver');
+    });
+
+    gulp.watch(project.path.client + '/**/*.{png, jpg, jpeg, svg}', function () {
       gulp.run('imagemin');
+      gulp.run('miscCopy');
     });
   });
 });

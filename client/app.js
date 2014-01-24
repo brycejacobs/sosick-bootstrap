@@ -1,15 +1,20 @@
-angular.module( 'sosickboot', [
-  'templates-app',
-  'ui.router',
-  'ui.select2',
+'use strict';
+
+var project = require('./../project.json');
+
+angular.module( project.name, [
+  require('templates-app'),
+  require('angular-ui-router'),
+  require('angulartics'),
+  require('angulartics.google.analytics'),
+  require('angularLocalStorage'),
+  require('ezfb'),
   'ui.bootstrap',
   'ngCookies',
   'ngSanitize',
-  'angulartics',
-  'angulartics.google.analytics',
-  'ezfb',
   'xeditable',
-  'angularLocalStorage'
+  require('./account').name,
+  require('./home').name
 ])
 
 .config( function myAppConfig () {
@@ -17,26 +22,12 @@ angular.module( 'sosickboot', [
 
 })
 
-.run(function ( $rootScope, $state, editableOptions ) {
-  // commentConfig
-  //   .setForumName('robertotravenbjj')
-  //   .setProvider('disqus');
-
-  editableOptions.theme = 'bs3';
-
-  $rootScope.$on('$stateChangeError', function ( event, toState, toParams, fromState, fromParams, error ) {
-    if (error === 'USER_NOT_FOUND' || error.status === 401) {
-      $state.go('signin');
-    } else {
-      console.log(error);
-    }
-  });
+.run(function () {
 })
 
-.controller( 'AppCtrl', function AppCtrl ( $scope, user, $rootScope, $location, $FB, $state ) {
+.controller( 'AppCtrl', function AppCtrl () {
 
   $scope.user = user;
 
 })
-
-;
+.constant('version', require('../package.json').version);
