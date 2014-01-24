@@ -95,7 +95,10 @@ gulp.task('herokupush', function () {
 });
 
 gulp.task('html2js', function () {
-  return gulp.src(project.path.client + '/**/*.tpl.html')
+  return gulp.src([
+    project.path.client + '/**/*.tpl.html',
+    '!' + project.path.bower
+    ])
     .pipe(html2Js())
     .pipe(concat('templates.js'))
     .pipe(gulp.dest(project.path.client));
