@@ -104,15 +104,11 @@ gulp.task('html2js', function () {
     .pipe(gulp.dest(project.path.client));
 });
 
-gulp.task('htmlCopy', function () {
-  return gulp.src(['/index.html'], {base: project.path.client, read: false})
-    .pipe(gulp.dest(project.path.temp));
-});
-
 gulp.task('htmlmin', function () {
   return gulp.src(project.path.client + '/*.html')
-    .pipe(minifyHtml())
-    .pipe(gulp.dest(project.path.dist));
+    .pipe(gulpIf(dist, minifyHtml()))
+    .pipe(gulp.dest(project.path.dist))
+    .pipe(livereload(server));
 });
 
 gulp.task('imagemin', function () {
@@ -159,7 +155,10 @@ gulp.task('restart', function () {
 
 // Compile Our Sass
 gulp.task('sass', function() {
-  return gulp.src([project.path.client + '/*{.scss, */*}.scss'])
+  return gulp.src([
+    project.path.client + '/*{.scss, */*}.scss',
+    project.path.bower + '/**/*.scss'
+  ])
   .pipe(sass({
     includePaths: [project.path.client + '/lib'],
     sourcemap : true
@@ -169,24 +168,35 @@ gulp.task('sass', function() {
   .pipe(livereload(server));
 });
 
+gulp.task('devBuild', [
+  'distClean',
+  'jshintserver',
+  'jshintclient',
+  'html2js',
+  'sass',
+  'browserify'
+]);
+
 gulp.task('build', [
   'distFlag',
   'distClean',
   'miscCopy',
-  'bowerCopy',
   'jshintserver',
   'jshintclient',
   'imagemin',
   'htmlmin',
   'cssmin',
-  'distUglify',
-  'usemin',
 ]);
 
 gulp.task('devBuild', [
-  'tempClean',
+  'distClean',
+  'imagemin',
   'htmlCopy',
-  'bowerCopy'
+  'miscCopy',
+  'sass',
+  'bowerCopy',
+  'jshintserver',
+  'jshintclient'
 ]);
 
 // Default Task
@@ -209,12 +219,20 @@ gulp.task('default', function(){
       gulp.run('html2js');
     });
 
+    gulp.watch(project.path.client '/*.html', function () {
+      gulp.run('htmlmin');
+    });
+
     gulp.watch(project.path.client + '/*{.scss, */*.scss}', function(){
       gulp.run('sass');
     });
 
     gulp.watch(project.path.client + '/*{.js, */*.js}', function () {
       gulp.run('browserify');
+    });
+
+    gulp.watch(project.path.client + '/**/*.{png, jpg, jpeg}', function () {
+      gulp.run('imagemin');
     });
   });
 });
