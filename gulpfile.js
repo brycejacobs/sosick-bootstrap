@@ -97,7 +97,7 @@ gulp.task('herokupush', function () {
 gulp.task('html2js', function () {
   return gulp.src([
     project.path.client + '/**/*.tpl.html',
-    '!' + project.path.bower
+    '!' + project.path.bower + '/**/*.tpl.html'
     ])
     .pipe(html2Js())
     .pipe(concat('templates.js'))
