@@ -2,6 +2,8 @@
   "name": "SosickBootstrap",
   "path": {
     "bower": "client/lib",
+    "browserify": "client/browserify",
+    "npm": "node_modules/",
     "client": "client",
     "config": "config",
     "dist": "dist",
