@@ -37,17 +37,19 @@ gulp.task('bower', function () {
 });
 
 gulp.task('browserify', function () {
-  return gulp.src([
-        project.path.client + '/**/*.js',
-        project.path.client + '/*.js'
-      ])
+  return gulp.src([ project.path.client + '/app.js'])
       .pipe(jshint('.jshintrc'))
       .pipe(browserify({
-        transform: ['es6ify'],
-        debug: !dist,
+        // transform: ['es6ify'],
+        // insertGlobals: true,
+        // debug: !dist,
         shim: {
+          'angular': {
+            path: project.path.bower + '/angular/angular.js',
+            exports: 'angular'
+          },
           'angular-easyfb': {
-            path: project.path.bower + '/angular-easyfb/angular-easyfb.js',
+            path: './client/lib/angular-easyfb/angular-easyfb.js',
             exports: 'ezfb'
           },
           angularLocalStorage: {
@@ -56,12 +58,14 @@ gulp.task('browserify', function () {
           },
           'angular-ui-router': {
             path: project.path.bower + '/angular-ui-router/release/angular-ui-router.js',
-            exports: 'ui.router'
+            exports: 'ui.router',
+            depends: {
+              angular: 'angular'
+            }
           },
           'angulartics': {
             path: project.path.bower + '/angulartics/src/angulartics.js',
             exports: 'angulartics'
-
           },
           'angulartics.google.analytics': {
             path: project.path.bower + '/angulartics/src/angulartics-ga.js',
@@ -89,8 +93,10 @@ gulp.task('browserify', function () {
 
 gulp.task('cssmin', function () {
   return gulp.src([
-      project.path.dist + '/css/*{.css, */*.css}',
-      project.path.client + '/css/*{.css, */*.css}'
+      project.path.dist + '/css/*.css',
+      project.path.dist + '/css/**/*.css',
+      project.path.client + '/css/*.css',
+      project.path.client + '/css/**/*.css'
     ])
     .pipe(concat('styles.css'))
     .pipe(cssMin())
@@ -124,7 +130,7 @@ gulp.task('html2js', function () {
     '!' + project.path.bower + '/**/*.tpl.html'
     ])
     .pipe(html2Js({
-      moduleName: 'templates-app'
+      // moduleName: 'templates-app'
     }))
     .pipe(concat('templates.js'))
     .pipe(gulp.dest(project.path.client));
@@ -154,27 +160,33 @@ gulp.task('imagemin', function () {
 
 gulp.task('jshintclient', function () {
   return gulp.src([
-    project.path.client + '/*{.js, */*.js}',
-    '!' + project.path.client + '/templates.js'
+    project.path.client + '/**/*.js',
+    project.path.client + '/*.js',
+    '!' + project.path.client + '/templates.js',
+    '!' + project.path.bower + '/*.js',
+    '!' + project.path.bower + '/**/*.js'
     ])
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'));
 });
 
 gulp.task('jshintserver', function () {
-  return gulp.src(project.path.server + '/*{.js, */*.js}')
+  return gulp.src([
+      project.path.server + '/*.js',
+      project.path.server + '/**/*.js'
+    ])
     .pipe(jshint('.jshint-server'))
     .pipe(jshint.reporter('default'));
 });
 
 gulp.task('miscCopy', function () {
-  // gulp.src(['/*.{ico, txt}'], {base: project.path.client})
-  //   .pipe(gulp.dest(project.path.dist));
+  gulp.src(['/*.ico', '/*.txt'], {base: project.path.client, read: false})
+    .pipe(gulp.dest(project.path.dist));
 
-  return gulp.src([
+  gulp.src([
       project.path.client + '/img/**/*.svg',
       project.path.client + '/img/*.svg'
-    ])
+    ], {read: false})
     .pipe(gulp.dest(project.path.dist + '/img/'), { force: true });
 });
 
@@ -234,8 +246,8 @@ gulp.task('default', function(){
   gulp.run('html2js');
   gulp.run('jshintserver');
   gulp.run('browserify');
-  gulp.run('miscCopy');
-  gulp.run('imagemin');
+  // gulp.run('miscCopy');
+  // gulp.run('imagemin');
   // gulp.run('nodemon');
   // Watch For Changes To Our SCSS
   server.listen(35729, function (err) {
@@ -254,8 +266,10 @@ gulp.task('default', function(){
     });
 
     gulp.watch([
-        project.path.client + '/*{.js, */*.js}',
-        '!' + project.path.bower + '/**/*.js'
+        project.path.client + '/**/*.js',
+        project.path.client + '/*.js',
+        '!' + project.path.bower + '/**/*.js',
+        '!' + project.path.bower + '/*.js'
       ], function () {
       gulp.run('jshintclient');
       gulp.run('browserify');
@@ -272,6 +286,7 @@ gulp.task('default', function(){
       gulp.run('imagemin');
       gulp.run('miscCopy');
     });
+
   });
 });
 

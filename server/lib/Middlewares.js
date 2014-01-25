@@ -55,9 +55,9 @@ exports.attachMiddleware = function (app) {
     ));
     server.use(logger());
 
-    app.servers.koa.getServer().use(livereload({
-      port : 35729
-    }));
+    // app.servers.koa.getServer().use(livereload({
+    //   port : 35729
+    // }));
   }
 
   if (process.env.NODE_ENV === 'heroku' || process.env.NODE_ENV === 'production') {
