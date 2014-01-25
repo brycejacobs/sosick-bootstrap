@@ -37,9 +37,13 @@ gulp.task('bower', function () {
 });
 
 gulp.task('browserify', function () {
-  return gulp.src([project.path.client + '/*{.js, */*.js}'])
+  return gulp.src([
+        project.path.client + '/**/*.js',
+        project.path.client + '/*.js'
+      ])
       .pipe(jshint('.jshintrc'))
       .pipe(browserify({
+        transform: ['es6ify'],
         debug: !dist,
         shim: {
           'angular-easyfb': {
