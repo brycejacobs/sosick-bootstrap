@@ -13,13 +13,7 @@ var _ = require('lodash'),
     requireDir = require('require-dir'),
     mongoose = require('mongoose');
 
-//KOA MIDDLEWARE DEPENDENCIES
-var crypto = require('crypto'),
-    path = require('path'),
-    http = require('http');
-
-var _ = require('lodash'),
-    koa = require('koa');
+var koa = require('koa');
 
 
 //Find out which environment we are preparing for.
@@ -65,7 +59,7 @@ _.defaults(app.config, {
 app.attachMiddleware = function() {
 
 
-}
+};
 
 // Run app.servers
 app.run = function () {
@@ -85,6 +79,7 @@ app.run = function () {
   app.lib.mongoose = mongoose;
   app.models = requireDir(app.dir + '/models');
   app.controllers = requireDir(app.dir + '/controllers');
+  require('./routes').registerRoutes(app);
 
   return app.servers.http.getServer();
 };

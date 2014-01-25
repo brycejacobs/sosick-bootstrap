@@ -2,9 +2,9 @@
   @return ($size * 10) + px;
 }
 
-@import "lib/sass-bootstrap/lib/bootstrap";
-@import "scss/webicons";
+@import "client/lib/sass-bootstrap/lib/bootstrap";
+@import "client/scss/webicons";
 
-@import "account/account";
-@import "admin/admin";
-@import "home/home";
+@import "client/account/account";
+@import "client/admin/admin";
+@import "client/home/home";

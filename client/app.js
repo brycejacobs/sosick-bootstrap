@@ -27,7 +27,5 @@ angular.module( project.name, [
 
 .controller( 'AppCtrl', function AppCtrl () {
 
-  $scope.user = user;
-
 })
 .constant('version', require('../package.json').version);

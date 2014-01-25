@@ -134,9 +134,12 @@ gulp.task('htmlmin', function () {
 });
 
 gulp.task('imagemin', function () {
-  return gulp.src(project.path.client + '/img/**/*.{jpeg, jpg, png, gif}')
+  return gulp.src([
+      '/img/**/*.{jpeg, jpg, png, gif}',
+      '/img/*.{jpeg, jpg, png, gif}'
+    ], {base: project.path.client})
     .pipe(imagemin())
-    .pipe(gulp.dest(project.path.dist + '/img'));
+    .pipe(gulp.dest(project.path.dist + '/img/'), {force: true});
 });
 
 gulp.task('jshintclient', function () {
@@ -155,11 +158,11 @@ gulp.task('jshintserver', function () {
 });
 
 gulp.task('miscCopy', function () {
-  gulp.src(['/*.{ico, txt}'], {base: project.path.client})
-    .pipe(gulp.dest(project.path.dist));
+  // gulp.src(['/*.{ico, txt}'], {base: project.path.client})
+  //   .pipe(gulp.dest(project.path.dist));
 
-  gulp.src(['/img/*.svg'], {base: project.path.client})
-    .pipe(gulp.dest(project.path.dist + '/img/'));
+  return gulp.src([project.path.client + 'img/**/*.svg'])
+    .pipe(gulp.dest(project.path.dist + '/img'), { force: true });
 });
 
 gulp.task('nodemon', function () {
@@ -216,9 +219,9 @@ gulp.task('build', [ //uglify and minify all that we can
 gulp.task('default', function(){
   gulp.run('sass');
   gulp.run('html2js');
-  gulp.run('jshintclient');
   gulp.run('jshintserver');
   gulp.run('browserify');
+  gulp.run('miscCopy');
   // gulp.run('nodemon');
   // Watch For Changes To Our SCSS
   server.listen(35729, function (err) {

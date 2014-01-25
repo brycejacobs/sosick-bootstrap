@@ -4,26 +4,19 @@
 
 'use strict';
 
-
-
-// Register controllers to routes.
-exports.register = function (app, restify) {
-
-
-  var error404 = ultimate.server.route.error404;
+exports.registerRoutes = function (app) {
 
   var c = app.controllers,
       s = app.servers.koa.getServer();
 
-  // Home
 
   s.resource('users', c.users.api);
 
   // Auth
-  s.post('/api/login', c.auth.loginPOST);
-  s.post('/api/logout', c.auth.logoutPOST);
-  s.post('/api/lost-password', c.auth.lostPasswordPOST);
-  s.post('/api/register', c.auth.registerPOST);
+  // s.post('/api/login', c.auth.loginPOST);
+  // s.post('/api/logout', c.auth.logoutPOST);
+  // s.post('/api/lost-password', c.auth.lostPasswordPOST);
+  // s.post('/api/register', c.auth.registerPOST);
 
   //Social Networking (TODO when passport is updated)
   // s.get('/auth/facebook', c.auth.facebook);
@@ -37,6 +30,5 @@ exports.register = function (app, restify) {
   // s.get('/auth/twitter/success', c.auth.twitterSuccess);
 
   // Blacklist (404.html)
-  s.get(/^\/api(?:[\/#?].*)?$/, c.home.error404);
-
+  // s.get(/^\/api(?:[\/#?].*)?$/, c.home.error404);
 };
