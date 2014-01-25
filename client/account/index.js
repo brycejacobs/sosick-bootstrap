@@ -1,6 +1,6 @@
 'use strict';
 
-var project = require('./../project.json');
+var project = require('../../project.json');
 
 module.exports = angular.module(project.name + '.account', [
   require('angular-ui-router')

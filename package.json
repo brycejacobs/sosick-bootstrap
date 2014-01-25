@@ -22,6 +22,7 @@
     "koa-session": "1.2.x",
     "koa-compress": "1.x.x",
     "koa-favi": "0.x.x",
+    "koa-livereload": "0.1.x",
     "koa-log4js": "0.x.x",
     "koa-router": "2.x.x",
     "koa-static": "1.x.x",
@@ -33,7 +34,6 @@
     "redis": "~0.10.x",
     "wrench": "~1.5.4",
     "xml2js": "~0.4.x"
-
   },
   "devDependencies": {
     "es6ify":"0.4.x",

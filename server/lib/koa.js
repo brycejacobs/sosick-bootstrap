@@ -24,38 +24,38 @@ var _app = null,
 
 function _configure() {
 
-  _server.use(router(_server));
-  _server.use(favicon(path.join(_app.dir, '..', _app.project.path.client, 'favicon.ico')));
-  _server.use(compress());
-  csrf(_server);
-  if (_.isObject(_app.config.cookie) && _.isString(_app.config.cookie.secret)) {
-    _server.keys = [_app.config.cookie.secret];
-  }
-  _server.use(session());
-  if (_.isFunction(_app.attachMiddlewares)) {
-    _app.attachMiddlewares();
-  }
+  // _server.use(router(_server));
+  // _server.use(favicon(path.join(_app.dir, '..', _app.project.path.client, 'favicon.ico')));
+  // _server.use(compress());
+  // csrf(_server);
+  // if (_.isObject(_app.config.cookie) && _.isString(_app.config.cookie.secret)) {
+  //   _server.keys = [_app.config.cookie.secret];
+  // }
+  // _server.use(session());
+  // if (_.isFunction(_app.attachMiddlewares)) {
+  //   _app.attachMiddlewares();
+  // }
 
 
-  _server.use(function *(next){
-    if ('POST' != this.method) {
-      return yield next;
-    }
+  // _server.use(function *(next){
+  //   if ('POST' != this.method) {
+  //     return yield next;
+  //   }
 
-    var body = yield parse(this, { limit: '1kb' });
-    if (!body.name) {
-      this.throw(400, '.name required');
-    }
-    this.body = { name: body.name.toUpperCase() };
-  });
+  //   var body = yield parse(this, { limit: '1kb' });
+  //   if (!body.name) {
+  //     this.throw(400, '.name required');
+  //   }
+  //   this.body = { name: body.name.toUpperCase() };
+  // });
 
 
 
   if(process.env.NODE_ENV === 'development') {
-    _server.use(serve(
-      path.join(_app.dir, '..', _app.project.path.dist)
-    ));
-    _server.use(logger());
+    // _server.use(serve(
+    //   path.join(_app.dir, '..', _app.project.path.dist)
+    // ));
+    // _server.use(logger());
   }
 
   if (process.env.NODE_ENV === 'heroku' || process.env.NODE_ENV === 'production') {

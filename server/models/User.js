@@ -6,7 +6,7 @@
 
 var util = require('util');
 
-var _ = require('lodash'),
+var _ = require('lodash');
     // bcrypt = require('bcrypt');
 
 var mongoose = require('mongoose');
@@ -14,7 +14,7 @@ var app = require('../app');
 
 // Schema
 var schema = new mongoose.Schema({
-  email: { type: type.Email, required: true },
+  email: { type: String, required: true },
   name: {
     first: { type: String, required: true },
     last: { type: String, required: true }
@@ -22,27 +22,25 @@ var schema = new mongoose.Schema({
   accessToken: { type: String },
   auth: {
     local: {
-      username: { type: type.Email },
+      username: { type: String },
       password: { type: String }
-    },
-    facebook: {
-      id: { type: String },
-      token: { type: String },
-      profile: { type: type.Mixed }
-    },
-    google: {
-      id: { type: String },
-      token: { type: String },
-      profile: { type: type.Mixed }
-    },
-    twitter: {
-      id: { type: String },
-      token: { type: String },
-      profile: { type: type.Mixed }
     }
-  },
-  meta: {
-    favorites: [{type: String, ref: 'Video'}]
+    //,
+    // facebook: {
+    //   id: { type: String },
+    //   token: { type: String },
+    //   profile: { type: type.Mixed }
+    // },
+    // google: {
+    //   id: { type: String },
+    //   token: { type: String },
+    //   profile: { type: type.Mixed }
+    // },
+    // twitter: {
+    //   id: { type: String },
+    //   token: { type: String },
+    //   profile: { type: type.Mixed }
+    // }
   },
   stripe: {
     cardNum: {type: String, default: null},

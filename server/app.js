@@ -6,87 +6,92 @@
 
 'use strict';
 
-var util = require('util');
-
-var path = require('path');
+var path = require('path'),
+    http = require('http');
 
 var _ = require('lodash'),
     Q = require('q'),
-    requireDir = require('require-dir');
+    requireDir = require('require-dir'),
+    mongoose = require('mongoose');
 
+//KOA MIDDLEWARE DEPENDENCIES
+var crypto = require('crypto'),
+    path = require('path'),
+    http = require('http');
+
+var _ = require('lodash'),
+    koa = require('koa');
+
+
+//Find out which environment we are preparing for.
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-var config = require(path.join(path.normalize(__dirname + '/../config'), process.env.NODE_ENV))
+var config = require(path.join(path.normalize(__dirname + '/../config'), process.env.NODE_ENV));
 
 // Create an app
 var app = {
   config: config,
   dir: __dirname,
+  lib: {},
   project: require('../project'),
   routes: require('./routes'),
-  servers: {}
+  servers: {
+    http: {
+      httpServer: null,
+      getServer: function () {
+        return this.httpServer;
+      },
+      run: function (server, port) {
+        this.httpServer = http.createServer(server.callback()).listen(port);
+      }
+    },
+    koa: {
+      koaServer: null,
+      getServer: function () {
+        return this.koaServer;
+      },
+      run: function () {
+        this.koaServer = koa();
+        return;
+      }
+    }
+  }
 };
-
-// Assign app to exports
-exports = module.exports = app;
-
 
 // Defaults for config
 _.defaults(app.config, {
   url: app.config.url || 'http://localhost:' + app.project.server.port
 });
 
-// Load modules
-app.lib = requireDir(app.dir + '/lib');
-app.models = requireDir(app.dir + '/models');
-app.controllers = requireDir(app.dir + '/controllers');
+//Attach All project specific middleware here.
+app.attachMiddleware = function() {
 
-// Attach middlewares called by app.servers.express
-app.attachMiddlewares = function () {
-
-  // Get better stack traces in dev, avoid due to perf issues in production
+  // // Get better stack traces in dev, avoid due to perf issues in production
   if (process.env.NODE_ENV === 'development') {
     Q.longStackSupport = true;
   }
-
-  // Custom
-  // app.servers.express.getServer().use(function (req, res, next) {
-  //   // Locals
-  //   res.locals.livereload = process.env.LIVERELOAD;
-  //   res.locals.csrf = req.session._csrf;
-  //   res.locals.user = req.user;
-  //   res.locals.role = {
-  //     admin: false
-  //   };
-
-  //   // User cookie
-  //   if (!req.user) {
-  //     app.lib.cookie.clearUserCookie(req, res);
-  //   } else {
-  //     app.lib.cookie.setUserCookie(req, res);
-  //   }
-
-  //   // Live reload
-  //   if (process.env.LIVERELOAD) {
-  //     res.cookie('livereload', process.env.LIVERELOAD);
-  //   } else {
-  //     res.clearCookie('livereload');
-  //   }
-
-  //   next();
-  // });
-};
+}
 
 // Run app.servers
 app.run = function () {
   // Connect to DB
-
-  require('./lib/mongoose').connect(app.config.db.mongo);
+  // require('./lib/mongoose').connect(app.config.db.mongo);
   // require('./lib/redis').connect(app.config.db.redis);
 
-  // Start servers
-  require('./lib/koa').run(app);
-  require('./lib/http').run(app);
+  //KOA server
+  app.servers.koa.run();
+  require('./lib/Middlewares').attachMiddleware(app);
 
-  // Return HTTP server
+  //HTTP Server
+  var port = process.env.PORT || app.project.server.port || 3000;
+  app.servers.http.run(app.servers.koa.getServer(), port);
+
+  //Make the models and such available.
+  app.lib.mongoose = mongoose;
+  app.models = requireDir(app.dir + '/models');
+  app.controllers = requireDir(app.dir + '/controllers');
+
   return app.servers.http.getServer();
 };
+
+// Assign app to exports
+exports = module.exports = app;

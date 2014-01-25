@@ -40,7 +40,6 @@ gulp.task('browserify', function () {
       .pipe(jshint('.jshintrc'))
       .pipe(browserify({
         debug: !dist,
-        transform: es6ify,
         shim: {
           'angular-easyfb': {
             path: project.path.bower + '/angular-easyfb/angular-easyfb.js',
@@ -49,6 +48,19 @@ gulp.task('browserify', function () {
           angularLocalStorage: {
               path: project.path.bower + '/angularLocalStorage/src/angularLocalStorage.js',
               exports: 'angularLocalStorage'
+          },
+          'angular-ui-router': {
+            path: project.path.bower + '/angular-ui-router/release/angular-ui-router.js',
+            exports: 'ui.router'
+          },
+          'angulartics': {
+            path: project.path.bower + '/angulartics/src/angulartics.js',
+            exports: 'angulartics'
+
+          },
+          'angulartics.google.analytics': {
+            path: project.path.bower + '/angulartics/src/angulartics-ga.js',
+            exports: 'angulartics.google.analytics'
           },
           modernizr: {
             path: project.path.bower + '/modernizr/modernizr.js',
@@ -161,10 +173,10 @@ gulp.task('restart', function () {
 gulp.task('sass', function() {
   return gulp.src([
     project.path.client + '/*{.scss, */*}.scss',
-    project.path.bower + '/**/*.scss'
+    // project.path.bower + '/**/*.scss'
   ])
   .pipe(sass({
-    includePaths: [project.path.client + '/lib'],
+    includePaths: [project.path.bower, ],
     sourcemap : true
   }))
   .pipe(concat('styles.css'))
@@ -172,16 +184,17 @@ gulp.task('sass', function() {
   .pipe(livereload(server));
 });
 
-gulp.task('devBuild', [
+gulp.task('devBuild', [ //Doesnt uglify our code
   'distClean',
   'jshintserver',
   'jshintclient',
   'html2js',
   'sass',
-  'browserify'
+  'browserify',
+  'imagemin'
 ]);
 
-gulp.task('build', [
+gulp.task('build', [ //uglify and minify all that we can
   'distFlag',
   'distClean',
   'miscCopy',
@@ -192,23 +205,13 @@ gulp.task('build', [
   'cssmin',
 ]);
 
-gulp.task('devBuild', [
-  'distClean',
-  'imagemin',
-  'htmlCopy',
-  'miscCopy',
-  'sass',
-  'bowerCopy',
-  'jshintserver',
-  'jshintclient'
-]);
-
 // Default Task
 gulp.task('default', function(){
   gulp.run('sass');
   gulp.run('html2js');
   gulp.run('jshintclient');
   gulp.run('jshintserver');
+  gulp.run('browserify');
   // gulp.run('nodemon');
   // Watch For Changes To Our SCSS
   server.listen(35729, function (err) {

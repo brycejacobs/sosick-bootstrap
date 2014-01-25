@@ -1,14 +1,13 @@
 'use strict';
 
-var project = require('./../project.json');
+var project = require('../project.json');
 
 angular.module( project.name, [
-  require('templates-app'),
-  require('angular-ui-router'),
-  require('angulartics'),
-  require('angulartics.google.analytics'),
-  require('angularLocalStorage'),
-  require('ezfb'),
+  'templates-app',
+  'angular-ui-router',
+  'angulartics',
+  'angularLocalStorage',
+  'ezfb',
   'ui.bootstrap',
   'ngCookies',
   'ngSanitize',
