@@ -135,9 +135,15 @@ gulp.task('htmlmin', function () {
 
 gulp.task('imagemin', function () {
   return gulp.src([
-      '/img/**/*.{jpeg, jpg, png, gif}',
-      '/img/*.{jpeg, jpg, png, gif}'
-    ], {base: project.path.client})
+      project.path.client + '/img/**/*.png',
+      project.path.client + '/img/**/*.jpeg',
+      project.path.client + '/img/**/*.gif',
+      project.path.client + '/img/*.png',
+      project.path.client + '/img/*.jpeg',
+      project.path.client + '/img/*.gif',
+      project.path.client + '/img/*.jpg',
+      project.path.client + '/img/**/*.jpg'
+    ])
     .pipe(imagemin())
     .pipe(gulp.dest(project.path.dist + '/img/'), {force: true});
 });
@@ -161,8 +167,11 @@ gulp.task('miscCopy', function () {
   // gulp.src(['/*.{ico, txt}'], {base: project.path.client})
   //   .pipe(gulp.dest(project.path.dist));
 
-  return gulp.src([project.path.client + 'img/**/*.svg'])
-    .pipe(gulp.dest(project.path.dist + '/img'), { force: true });
+  return gulp.src([
+      project.path.client + '/img/**/*.svg',
+      project.path.client + '/img/*.svg'
+    ])
+    .pipe(gulp.dest(project.path.dist + '/img/'), { force: true });
 });
 
 gulp.task('nodemon', function () {
@@ -222,6 +231,7 @@ gulp.task('default', function(){
   gulp.run('jshintserver');
   gulp.run('browserify');
   gulp.run('miscCopy');
+  gulp.run('imagemin');
   // gulp.run('nodemon');
   // Watch For Changes To Our SCSS
   server.listen(35729, function (err) {
