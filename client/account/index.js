@@ -3,7 +3,7 @@
 var project = require('../../project.json');
 
 module.exports = angular.module(project.name + '.account', [
-  require('angular-ui-router')
+  'angular-ui-router'
 ])
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'account', {

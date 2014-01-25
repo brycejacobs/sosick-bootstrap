@@ -5,7 +5,8 @@ var gulp = require('gulp'),
 sass       = require('gulp-sass'),
 lr         = require('tiny-lr'),
 livereload = require('gulp-livereload'),
-html2Js  = require('gulp-html2js'),
+// html2Js  = require('gulp-html2js'),
+html2Js =   require("gulp-ng-html2js"),
 server     = lr(),
 minifyHtml = require('gulp-minify-html'),
 concat = require('gulp-concat'),
@@ -83,7 +84,10 @@ gulp.task('browserify', function () {
 });
 
 gulp.task('cssmin', function () {
-  return gulp.src(project.path.dist + '/css/*{.css, */*.css}')
+  return gulp.src([
+      project.path.dist + '/css/*{.css, */*.css}',
+      project.path.client + '/css/*{.css, */*.css}'
+    ])
     .pipe(concat('styles.css'))
     .pipe(cssMin())
     .pipe(gulp.dest(project.path.dist + '/css'));
@@ -115,7 +119,9 @@ gulp.task('html2js', function () {
     project.path.client + '/**/*.tpl.html',
     '!' + project.path.bower + '/**/*.tpl.html'
     ])
-    .pipe(html2Js())
+    .pipe(html2Js({
+      moduleName: 'templates-app'
+    }))
     .pipe(concat('templates.js'))
     .pipe(gulp.dest(project.path.client));
 });
@@ -172,11 +178,11 @@ gulp.task('restart', function () {
 // Compile Our Sass
 gulp.task('sass', function() {
   return gulp.src([
-    project.path.client + '/*{.scss, */*}.scss',
+    project.path.client + '/app.scss',
     // project.path.bower + '/**/*.scss'
   ])
   .pipe(sass({
-    includePaths: [project.path.bower, ],
+    includePaths: [project.path.bower],
     sourcemap : true
   }))
   .pipe(concat('styles.css'))
@@ -185,13 +191,14 @@ gulp.task('sass', function() {
 });
 
 gulp.task('devBuild', [ //Doesnt uglify our code
-  'distClean',
   'jshintserver',
   'jshintclient',
   'html2js',
   'sass',
   'browserify',
-  'imagemin'
+  'imagemin',
+  'miscCopy',
+  'htmlmin'
 ]);
 
 gulp.task('build', [ //uglify and minify all that we can

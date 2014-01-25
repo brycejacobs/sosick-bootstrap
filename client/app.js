@@ -16,12 +16,13 @@ angular.module( project.name, [
   require('./home').name
 ])
 
-.config( function myAppConfig () {
-
-
+.config( function myAppConfig ($urlRouteProvider, $locationProvider) {
+  $urlRouterProvider.otherwise( '/home' );
+  $locationProvider.hashPrefix('!');
 })
 
 .run(function () {
+
 })
 
 .controller( 'AppCtrl', function AppCtrl () {

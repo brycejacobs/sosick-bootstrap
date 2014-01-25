@@ -10,7 +10,6 @@ var path = require('path'),
     http = require('http');
 
 var _ = require('lodash'),
-    Q = require('q'),
     requireDir = require('require-dir'),
     mongoose = require('mongoose');
 
@@ -65,10 +64,7 @@ _.defaults(app.config, {
 //Attach All project specific middleware here.
 app.attachMiddleware = function() {
 
-  // // Get better stack traces in dev, avoid due to perf issues in production
-  if (process.env.NODE_ENV === 'development') {
-    Q.longStackSupport = true;
-  }
+
 }
 
 // Run app.servers
