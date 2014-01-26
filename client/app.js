@@ -2,24 +2,22 @@
 
 var project = require('../project.json');
 
-
-
 angular.module( project.name, [
-  'ui.router'
-      // angulartics,
-  // 'angularLocalStorage',
-  // 'ezfb',
-  // 'ui.bootstrap',
-  // 'ngCookies',
-  // 'ngSanitize',
-  // 'xeditable',
-  // require('./account').name,
-  // require('./home').name
+  project.name + '-templates',
+  'ui.router',
+  'angulartics',
+  'ezfb',
+  'ui.bootstrap',
+  'ngCookies',
+  'ngSanitize',
+  require('./account').name,
+  require('./home').name,
+  // 'angularLocalStorage'
 ])
 
-.config( function myAppConfig () {
-  // $urlRouterProvider.otherwise( '/home' );
-  // $locationProvider.hashPrefix('!');
+.config( function myAppConfig ($urlRouterProvider, $locationProvider) {
+  $urlRouterProvider.otherwise( '/home' );
+  $locationProvider.hashPrefix('!');
 })
 
 .run(function () {
@@ -27,6 +25,6 @@ angular.module( project.name, [
 })
 
 .controller( 'AppCtrl', function AppCtrl () {
-  console.log(window);
+
 })
 .constant('version', require('../package.json').version);

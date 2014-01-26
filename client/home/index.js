@@ -3,8 +3,7 @@
 var project = require('../../project.json');
 
 module.exports = angular.module(project.name + '.home', [
-  'ui.router',
-  'home/home.tpl.html'
+  'ui.router'
 ])
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'home', {

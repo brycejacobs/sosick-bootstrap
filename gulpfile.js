@@ -37,53 +37,14 @@ gulp.task('bower', function () {
 });
 
 gulp.task('browserify', function () {
-  return gulp.src([ project.path.client + '/app.js'])
+    gulp.src([
+      project.path.client + '/app.js',
+      '!' + project.path.client + '/templates.js'
+      ])
       .pipe(jshint('.jshintrc'))
       .pipe(browserify({
-        // transform: ['es6ify'],
-        // insertGlobals: true,
-        // debug: !dist,
-        shim: {
-          'angular': {
-            path: project.path.bower + '/angular/angular.js',
-            exports: 'angular'
-          },
-          'angular-easyfb': {
-            path: './client/lib/angular-easyfb/angular-easyfb.js',
-            exports: 'ezfb'
-          },
-          angularLocalStorage: {
-              path: project.path.bower + '/angularLocalStorage/src/angularLocalStorage.js',
-              exports: 'angularLocalStorage'
-          },
-          'angular-ui-router': {
-            path: project.path.bower + '/angular-ui-router/release/angular-ui-router.js',
-            exports: 'ui.router',
-            depends: {
-              angular: 'angular'
-            }
-          },
-          'angulartics': {
-            path: project.path.bower + '/angulartics/src/angulartics.js',
-            exports: 'angulartics'
-          },
-          'angulartics.google.analytics': {
-            path: project.path.bower + '/angulartics/src/angulartics-ga.js',
-            exports: 'angulartics.google.analytics'
-          },
-          modernizr: {
-            path: project.path.bower + '/modernizr/modernizr.js',
-            exports: 'modernizr'
-          },
-          'es5-shim': {
-            path: project.path.bower + '/es5-shim/es5-shim.js',
-            exports: 'es5-shim'
-          },
-          json3: {
-            path: project.path.bower + '/json3/lib/json3.js',
-            exports: 'json3'
-          }
-        }
+        transform: ['es6ify'],
+        debug: !dist
       }))
       .pipe(concat('app.js'))
       .pipe(gulpIf(dist, uglify()))
@@ -101,6 +62,24 @@ gulp.task('cssmin', function () {
     .pipe(concat('styles.css'))
     .pipe(cssMin())
     .pipe(gulp.dest(project.path.dist + '/css'));
+});
+
+gulp.task('depsBuild', function () {
+
+  return gulp.src([
+    project.path.bower + '/angular-easyfb/angular-easyfb.js',
+    project.path.bower + '/angular-ui-router/release/angular-ui-router.js',
+    project.path.bower + '/angulartics/src/angulartics.js',
+    project.path.bower + '/angulartics/src/angulartics-ga.js',
+    project.path.bower + '/modernizr/modernizr.js',
+    project.path.bower + '/es5-shim/es5-shim.js',
+    project.path.bower + '/json3/lib/json3.js',
+    project.path.bower + '/angular-bootstrap/ui-bootstrap-tpls.js',
+    project.path.bower + '/angular-bootstrap/ui-bootstrap.js',
+    project.path.client + '/templates.js'
+  ])
+  .pipe(concat('deps.js'))
+  .pipe(gulp.dest(project.path.dist + '/js/'));
 });
 
 gulp.task('distClean', function () {
@@ -130,7 +109,7 @@ gulp.task('html2js', function () {
     '!' + project.path.bower + '/**/*.tpl.html'
     ])
     .pipe(html2Js({
-      // moduleName: 'templates-app'
+      moduleName: project.name + '-templates'
     }))
     .pipe(concat('templates.js'))
     .pipe(gulp.dest(project.path.client));
@@ -223,6 +202,7 @@ gulp.task('devBuild', [ //Doesnt uglify our code
   'jshintclient',
   'html2js',
   'sass',
+  'depsBuild',
   'browserify',
   'imagemin',
   'miscCopy',
