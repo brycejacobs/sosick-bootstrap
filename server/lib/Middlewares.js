@@ -24,7 +24,7 @@ exports.attachMiddleware = function (app) {
   server = app.servers.koa.getServer();
 
   server.use(router(server));
-  server.use(favicon(path.join(app.dir, '..', app.project.path.client, 'favicon.ico')));
+  server.use(favicon(path.join(app.dir, '..', app.project.path.dist, '/favicon.ico')));
   server.use(compress());
   csrf(server);
   if (_.isObject(app.config.cookie) && _.isString(app.config.cookie.secret)) {
