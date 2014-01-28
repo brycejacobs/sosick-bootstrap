@@ -4,8 +4,7 @@
 
 'use strict';
 
-var url = require('url'),
-    util = require('util');
+var url = require('url');
 
 var _ = require('lodash'),
     redis = require('redis');
@@ -28,8 +27,10 @@ function createClient(redisConfig, onConnectCallback) {
   }
 
   client.once('connect', function () {
-    console.log('Connected to Redis.')
-    if (onConnectCallback) { onConnectCallback(); }
+    console.log('Connected to Redis.');
+    if (onConnectCallback) {
+      onConnectCallback();
+    }
   });
 
   client.on('error', function (err) {

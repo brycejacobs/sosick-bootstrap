@@ -1,7 +1,5 @@
 var app = require('../app');
 
-var s = app.servers.koa.getServer();
-
 exports.api = {
   // GET /users
   index: function *(next) {
@@ -10,28 +8,28 @@ exports.api = {
   },
   // GET /users/new
   new: function *(next) {
-    next();
+    yield next();
   },
   // POST /users
   create: function *(next) {
-    next(); //we don't want this
+    yield next(); //we don't want this
   },
   // GET /users/:id
   show: function *(next) {
     var user = yield app.models.User.findById(this.param.id).exec();
-    next(user);
+    yield next(user);
   },
   // GET /users/:id/edit
   edit: function *(next) {
-    next();
+    yield next();
   },
   // PUT /users/:id
   update: function *(next) {
     //TODO
-    next();
+    yield next();
   },
   // DELETE /users/:id
   destroy: function *(next) {
-    next();
+    yield next();
   }
 };

@@ -16,6 +16,8 @@
   "dependencies": {
     "angular-ui-router" : "0.2.x",
     "angulartics": "0.8.x",
+    "co": "3.0.x",
+    "co-body": "0.0.x",
     "colors": "~0.6.2",
     "koa": "0.3.x",
     "koa-csrf": "1.x.x",
@@ -29,7 +31,6 @@
     "lodash": "~2.4.1",
     "mkdirp": "~0.3.5",
     "mongoose": "~3.8.3",
-    "q": "=0.9.6",
     "require-dir": "0.1.x",
     "redis": "~0.10.x",
     "wrench": "~1.5.4",

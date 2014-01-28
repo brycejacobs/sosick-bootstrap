@@ -13,6 +13,7 @@ var _ = require('lodash'),
     favicon = require('koa-favi'),
     livereload = require('koa-livereload'),
     logger = require('koa-log4js'),
+    parse = require('co-body'),
     router = require('koa-router'),
     session = require('koa-session'),
     serve = require('koa-static');
@@ -27,7 +28,7 @@ exports.attachMiddleware = function (app) {
   server.use(compress());
   csrf(server);
   if (_.isObject(app.config.cookie) && _.isString(app.config.cookie.secret)) {
-   server.keys = [app.config.cookie.secret];
+    server.keys = [app.config.cookie.secret];
   }
   server.use(session());
   if (_.isFunction(app.attachMiddleware)) {
@@ -37,7 +38,7 @@ exports.attachMiddleware = function (app) {
 
 
   server.use(function *(next){
-    if ('POST' != this.method) {
+    if ('POST' !== this.method) {
       return yield next;
     }
 
@@ -55,9 +56,9 @@ exports.attachMiddleware = function (app) {
     ));
     server.use(logger());
 
-    // app.servers.koa.getServer().use(livereload({
-    //   port : 35729
-    // }));
+    app.servers.koa.getServer().use(livereload({
+      port : 35729
+    }));
   }
 
   if (process.env.NODE_ENV === 'heroku' || process.env.NODE_ENV === 'production') {
@@ -67,16 +68,13 @@ exports.attachMiddleware = function (app) {
       { maxAge: maxAge }
     ));
 
-    server.on('error', function *(err) {
+    server.on('error', function (err) {
       console.log(err.stack);
       this.response.status = 500;
       this.response.body = 'Sorry we have encountered an error.';
     });
   }
-
-
-
-}
+};
 
 
 

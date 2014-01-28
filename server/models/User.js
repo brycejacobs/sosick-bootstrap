@@ -4,13 +4,12 @@
 
 'use strict';
 
-var util = require('util');
+// var util = require('util');
 
-var _ = require('lodash');
+// var _ = require('lodash');
     // bcrypt = require('bcrypt');
-
-var mongoose = require('mongoose');
 var app = require('../app');
+var mongoose = app.lib.mongoose;
 
 // Schema
 var schema = new mongoose.Schema({
@@ -114,68 +113,68 @@ schema.virtual('isAdmin').get(function () {
 /**
  * Facebook auth
  */
-schema.statics.findOrCreateFacebook = function (accessToken, refreshToken, profile, cb) {
-  // console.log(profile._json);
-  var data = {
-    email: profile._json.email,
-    name: {
-      /* jshint camelcase: false */
-      first: profile._json.first_name,
-      last: profile._json.last_name
-      /* jshint camelcase: true */
-    },
-    'auth.facebook': {
-      id: profile.id,
-      token: accessToken,
-      profile: profile._json
-    }
-  };
-  app.models.User.findOneAndUpdate({
-    email: data.email
-  }, _.omit(data, ['email', 'name']), function (err, user) {
-    if (err) { return cb(err); }
-    if (user) {
-      // Updated existing account.
-      return cb(null, user);
-    } else {
-      // Create new account.
-      app.models.User.create(data, cb);
-    }
-  });
-};
+// schema.statics.findOrCreateFacebook = function (accessToken, refreshToken, profile, cb) {
+//   // console.log(profile._json);
+//   var data = {
+//     email: profile._json.email,
+//     name: {
+//       /* jshint camelcase: false */
+//       first: profile._json.first_name,
+//       last: profile._json.last_name
+//       /* jshint camelcase: true */
+//     },
+//     'auth.facebook': {
+//       id: profile.id,
+//       token: accessToken,
+//       profile: profile._json
+//     }
+//   };
+//   app.models.User.findOneAndUpdate({
+//     email: data.email
+//   }, _.omit(data, ['email', 'name']), function (err, user) {
+//     if (err) { return cb(err); }
+//     if (user) {
+//       // Updated existing account.
+//       return cb(null, user);
+//     } else {
+//       // Create new account.
+//       app.models.User.create(data, cb);
+//     }
+//   });
+// };
 
 /**
  * Google auth
  */
-schema.statics.findOrCreateGoogle = function (accessToken, refreshToken, profile, cb) {
-  // console.log(profile._json);
-  var data = {
-    email: profile._json.email,
-    name: {
-      /* jshint camelcase: false */
-      first: profile._json.given_name,
-      last: profile._json.family_name
-      /* jshint camelcase: true */
-    },
-    'auth.google': {
-      id: profile.id,
-      token: accessToken,
-      profile: profile._json
-    }
-  };
-  app.models.User.findOneAndUpdate({
-    email: data.email
-  }, _.omit(data, ['email', 'name']), function (err, user) {
-    if (err) { return cb(err); }
-    if (user) {
-      // Updated existing account.
-      return cb(null, user);
-    } else {
-      // Create new account.
-      app.models.User.create(data, cb);
-    }
-  });
-};
+// schema.statics.findOrCreateGoogle = function (accessToken, refreshToken, profile, cb) {
+//   // console.log(profile._json);
+//   var data = {
+//     email: profile._json.email,
+//     name: {
+//       /* jshint camelcase: false */
+//       first: profile._json.given_name,
+//       last: profile._json.family_name
+//       /* jshint camelcase: true */
+//     },
+//     'auth.google': {
+//       id: profile.id,
+//       token: accessToken,
+//       profile: profile._json
+//     }
+//   };
+//   app.models.User.findOneAndUpdate({
+//     email: data.email
+//   }, _.omit(data, ['email', 'name']), function (err, user) {
+//     if (err) { return cb(err); }
+//     if (user) {
+//       // Updated existing account.
+//       return cb(null, user);
+//     } else {
+//       // Create new account.
+//       app.models.User.create(data, cb);
+//     }
+//   });
+// };
 
 /**
  * Twitter auth
@@ -185,35 +184,35 @@ schema.statics.findOrCreateGoogle = function (accessToken, refreshToken, profile
  * pass field requirement validation.
  * E-mail may be updated by other auth strategies.
  */
-schema.statics.findOrCreateTwitter = function (token, tokenSecret, profile, cb) {
-  // console.log(profile._json);
-  var data = {
-    email: util.format('%s@%s.twitter.id',
-                       ultimate.util.uuid({ dash: false }),
-                       profile.id),
-    name: {
-      first: profile._json.name.split(' ').slice(0, -1).join(' '),
-      last: profile._json.name.split(' ').slice(-1).join(' ')
-    },
-    'auth.twitter': {
-      id: profile.id,
-      token: token,
-      profile: profile._json
-    }
-  };
-  app.models.User.findOneAndUpdate({
-    'auth.twitter.id': profile.id
-  }, _.omit(data, ['email', 'name']), function (err, user) {
-    if (err) { return cb(err); }
-    if (user) {
-      // Updated existing account.
-      return cb(null, user);
-    } else {
-      // Create new account.
-      app.models.User.create(data, cb);
-    }
-  });
-};
+// schema.statics.findOrCreateTwitter = function (token, tokenSecret, profile, cb) {
+//   // console.log(profile._json);
+//   var data = {
+//     email: util.format('%s@%s.twitter.id',
+//                        ultimate.util.uuid({ dash: false }),
+//                        profile.id),
+//     name: {
+//       first: profile._json.name.split(' ').slice(0, -1).join(' '),
+//       last: profile._json.name.split(' ').slice(-1).join(' ')
+//     },
+//     'auth.twitter': {
+//       id: profile.id,
+//       token: token,
+//       profile: profile._json
+//     }
+//   };
+//   app.models.User.findOneAndUpdate({
+//     'auth.twitter.id': profile.id
+//   }, _.omit(data, ['email', 'name']), function (err, user) {
+//     if (err) { return cb(err); }
+//     if (user) {
+//       // Updated existing account.
+//       return cb(null, user);
+//     } else {
+//       // Create new account.
+//       app.models.User.create(data, cb);
+//     }
+//   });
+// };
 
 // Model
 var model = mongoose.model('User', schema);
